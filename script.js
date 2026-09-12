@@ -7,17 +7,17 @@
    ================================================================ */
 
 const streamer = {
-  name:     "NOMBRE",
+  name:     "Onechapi",
   description: "Streamer argentino en crecimiento.",
-  location: "Buenos Aires, Argentina",
+  location: "Buenos Aires, o algún lugar del planeta",
   avatar:   "assets/avatar.webp",
 
   about: "Soy un streamer argentino nacido en 1991, de Buenos Aires, La Matanza. Estoy construyendo mi camino en el mundo del streaming y creando una comunidad alrededor del gaming, el entretenimiento y los directos.",
 
   socials: {
-    twitch:   "",   // ej: "https://twitch.tv/tu_canal"
+    twitch:   "https://twitch.tv/onechapi",
     youtube:  "",   // ej: "https://youtube.com/@tu_canal"
-    instagram:"",   // ej: "https://instagram.com/tu_cuenta"
+    instagram:"https://instagram.com/onechapi",
     tiktok:   "",   // ej: "https://tiktok.com/@tu_cuenta"
     discord:  "",   // ej: "https://discord.gg/tu_codigo"
     x:        "",   // ej: "https://x.com/tu_cuenta"
