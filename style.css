@@ -1,6 +1,6 @@
 /* ============================================================
-   ONECHAPI — Minimal Landing
-   Dark, premium, ultra-minimal
+   ONECHAPI — Minimal + Synthwave Name
+   Dark, premium, ultra-minimal, with synthwave identity
    ============================================================ */
 
 /* ---------- Reset ---------- */
@@ -66,11 +66,81 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
   padding: 40px;
+  text-align: center;
+}
+
+/* ---------- NOMBRE — Synthwave suave ---------- */
+.name {
+  position: relative;
+  display: inline-block;
+  font-family: 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #A855F7;
+  text-shadow:
+    0 0 40px rgba(168, 85, 247, 0.4),
+    0 0 80px rgba(168, 85, 247, 0.25),
+    0 0 120px rgba(124, 58, 237, 0.15);
+  margin-bottom: 8px;
+}
+
+/* Sutil scanline para synthwave */
+.name::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.6) 50%,
+    transparent 100%);
+  animation: scanline 3s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes scanline {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Glitch secundario — muy sutil, solo tono rojo en capa */
+.name-glitch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #EF4444;
+  text-shadow:
+    -2px 0 rgba(239, 68, 68, 0.4),
+    2px 0 rgba(239, 68, 68, 0.4);
+  opacity: 0.15;
+  clip-path: inset(0 0 60% 0);
+  animation: glitch-shift 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glitch-shift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.15; }
+  92%      { transform: translate(-2px, 1px); opacity: 0.25; }
+  94%      { transform: translate(2px, -1px); opacity: 0.1; }
+  96%      { transform: translate(-1px, 0); opacity: 0.2; }
+  98%      { transform: translate(1px, 1px); opacity: 0.15; }
 }
 
 /* ---------- Botones ---------- */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -87,7 +157,8 @@ body::after {
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn .icon {
+.btn .icon,
+.btn .icon-twitch {
   width: 20px;
   height: 20px;
   fill: none;
@@ -118,7 +189,7 @@ body::after {
   transform: translateY(0) scale(0.98);
 }
 
-/* Twitch — purple premium */
+/* Twitch — purple premium con logo oficial */
 .btn-twitch {
   background: rgba(124, 58, 237, 0.12);
   color: #C8A8FF;
@@ -141,11 +212,23 @@ body::after {
   transform: translateY(0) scale(0.98);
 }
 
+/* Icono Twitch — se pone en color puro (no hereda stroke) */
+.btn-twitch .icon-twitch {
+  fill: currentColor;
+  stroke: none;
+  width: 22px;
+  height: 22px;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 480px) {
   .container {
-    gap: 18px;
+    gap: 28px;
     padding: 32px 20px;
+  }
+
+  .name {
+    font-size: clamp(2.4rem, 14vw, 3.6rem);
   }
 
   .btn {
@@ -154,7 +237,8 @@ body::after {
     gap: 10px;
   }
 
-  .btn .icon {
+  .btn .icon,
+  .btn .icon-twitch {
     width: 18px;
     height: 18px;
   }
@@ -162,8 +246,12 @@ body::after {
 
 @media (max-height: 600px) {
   .container {
-    gap: 14px;
+    gap: 18px;
     padding: 20px;
+  }
+
+  .name {
+    font-size: clamp(2rem, 8vh, 2.8rem);
   }
 
   .btn {
@@ -174,10 +262,8 @@ body::after {
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  body::before {
-    animation: none;
-  }
-  .btn {
-    transition: none;
-  }
+  body::before { animation: none; }
+  .name::after { animation: none; }
+  .name-glitch { animation: none; opacity: 0.08; }
+  .btn { transition: none; }
 }
