@@ -1,9 +1,9 @@
 /* ================================================================
    STREAMER LANDING — JavaScript
-   ================================================================
-   Para personalizar: editá SOLO el objeto `streamer` de abajo.
-   No tenés que tocar HTML ni CSS para cambiar nombre, redes,
-   descripciones, about, etc.
+   Responsive + SEO ready
+
+   Editar SOLO el objeto `streamer` para cambiar datos.
+   El HTML ya tiene los valores por defecto (Onechapi) por SEO.
    ================================================================ */
 
 const streamer = {
@@ -16,12 +16,12 @@ const streamer = {
 
   socials: {
     twitch:   "https://twitch.tv/onechapi",
-    youtube:  "",   // ej: "https://youtube.com/@tu_canal"
+    youtube:  "",
     instagram:"https://instagram.com/onechapi",
-    tiktok:   "",   // ej: "https://tiktok.com/@tu_cuenta"
-    discord:  "",   // ej: "https://discord.gg/tu_codigo"
-    x:        "",   // ej: "https://x.com/tu_cuenta"
-    facebook: ""    // ej: "https://facebook.com/tu_pagina"
+    tiktok:   "",
+    discord:  "",
+    x:        "",
+    facebook: ""
   }
 };
 
@@ -64,48 +64,62 @@ document.addEventListener("DOMContentLoaded", () => {
   const footerTagline = document.querySelector(".footer-brand .tagline");
   const footerLoc     = document.querySelector(".footer-brand .location");
   const copyName      = document.getElementById("footer-copy-name");
-  const logoText      = document.querySelector(".site-logo span:last-child");
-  const logoIcon      = document.querySelector(".logo-icon");
   const btnStream     = document.getElementById("btn-stream");
   const avatarImg     = document.querySelector(".hero-avatar img");
   const avatarFallback= document.querySelector(".hero-avatar .avatar-fallback");
 
   const displayName  = streamer.name.toUpperCase();
 
-  /* ---- Hero ---- */
-  if (heroName)      heroName.textContent      = displayName;
-  if (heroLoc)       heroLoc.textContent       = `Transmitiendo desde ${streamer.location}`;
-  if (heroDesc)      heroDesc.textContent      = streamer.description;
-  if (heroEyebrow)   heroEyebrow.textContent   = "STREAMER • GAMING • CREATOR";
-  if (aboutText)     aboutText.textContent     = streamer.about;
-  if (footerName)    footerName.textContent    = displayName;
-  if (footerTagline) footerTagline.textContent = "Streamer • Gaming • Creator";
-  if (footerLoc)     footerLoc.textContent     = streamer.location;
-  if (copyName)      copyName.textContent      = displayName;
-  if (logoText)      logoText.textContent      = displayName;
-  if (logoIcon)      logoIcon.textContent      = displayName.charAt(0);
+  /* ---- Hero (solo si el HTML no tiene los valores por defecto) ---- */
+  if (heroName && heroName.textContent === "[NAME]") {
+    heroName.textContent = displayName;
+  }
+  if (heroLoc && !heroLoc.textContent.includes(streamer.location)) {
+    heroLoc.textContent = `Transmitiendo desde ${streamer.location}`;
+  }
+  if (heroDesc && heroDesc.textContent === "Streamer argentino en crecimiento, creando contenido, compartiendo partidas y construyendo una comunidad.") {
+    heroDesc.textContent = streamer.description;
+  }
+  if (heroEyebrow) heroEyebrow.textContent = "STREAMER · GAMING · CREATOR";
+  if (aboutText && aboutText.textContent.includes("[NAME]")) {
+    aboutText.textContent = streamer.about;
+  }
+  if (footerName && footerName.textContent === "[NAME]") {
+    footerName.textContent = displayName;
+  }
+  if (footerTagline && footerTagline.textContent === "Streamer • Gaming • Creator") {
+    footerTagline.textContent = "Streamer · Gaming · Creator";
+  }
+  if (footerLoc && footerLoc.textContent.includes("[NAME]")) {
+    footerLoc.textContent = streamer.location;
+  }
+  if (copyName && copyName.textContent === "[NAME]") {
+    copyName.textContent = displayName;
+  }
 
-  /* ---- Botón VER STREAM ---- */
+  /* ---- Botón VER STREAM: se configura mejor en HTML, JS solo confirma ---- */
   if (btnStream) {
     const twitchUrl = streamer.socials.twitch && streamer.socials.twitch.trim();
     if (twitchUrl) {
-      btnStream.href        = twitchUrl;
-      btnStream.target      = "_blank";
-      btnStream.rel         = "noopener noreferrer";
-      btnStream.innerHTML   = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg> VER STREAM`;
-      btnStream.style.cursor= "pointer";
+      btnStream.href   = twitchUrl;
+      btnStream.target = "_blank";
+      btnStream.rel    = "noopener noreferrer";
     } else {
       btnStream.removeAttribute("href");
-      btnStream.style.cursor = "default";
     }
   }
 
-  /* ---- Avatar: fallback a inicial si la imagen falla ---- */
+  /* ---- Avatar: fallback a O1 si la imagen falla ---- */
   if (avatarImg && avatarFallback) {
     avatarImg.onerror = () => {
-      avatarImg.style.display    = "none";
-      avatarFallback.style.display= "grid";
-      avatarFallback.textContent   = displayName.charAt(0);
+      avatarImg.style.display     = "none";
+      avatarFallback.style.display = "grid";
+      avatarFallback.textContent   = "O1";
+      avatarFallback.setAttribute("aria-label", "Avatar no disponible - Onechapi");
+    };
+    // Si la imagen carga bien, asegurar que el fallback esté oculto
+    avatarImg.onload = () => {
+      avatarFallback.style.display = "none";
     };
   }
 
@@ -117,16 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     order.forEach((key, idx) => {
       const url = streamer.socials[key] && streamer.socials[key].trim();
-      if (!url) return; // ocultar tarjeta si no hay URL
+      if (!url) return; // ocultar si no hay URL
 
       const meta  = SOCIAL_META[key];
       const icon  = ICONS[key];
       if (!meta || !icon) return;
 
       const delay = `reveal-delay-${Math.min(idx + 1, 7)}`;
-      const safeName   = meta.name;
-      const safeDesc   = meta.desc;
-      const safeUrl    = url;
+      const safeName = meta.name;
+      const safeDesc = meta.desc;
+      const safeUrl  = url;
 
       cardsHTML += `
         <a href="${safeUrl}"
@@ -134,7 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
            rel="noopener noreferrer"
            class="social-card reveal ${delay}"
            aria-label="${safeName} — ${safeDesc}"
-           data-platform="${key}">
+           data-platform="${key}"
+           role="listitem">
           <div class="social-icon">${icon}</div>
           <span class="social-name">${safeName}</span>
           <span class="social-desc">${safeDesc}</span>
@@ -146,7 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
            rel="noopener noreferrer"
            aria-label="${safeName}"
            title="${safeName}"
-           data-platform="${key}">
+           data-platform="${key}"
+           role="listitem">
           ${icon}
         </a>`;
     });
