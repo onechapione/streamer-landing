@@ -1,5 +1,5 @@
 /* ============================================================
-   ONECHAPI — Minimal + Synthwave Name
+   ONECHAPI — Minimal + Synthwave Name + Easter Egg
    Dark, premium, ultra-minimal, with synthwave identity
    ============================================================ */
 
@@ -15,6 +15,9 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* ---------- Google Font: Orbitron (tipografía anterior, más limpia) ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   background-color: #050505;
@@ -26,19 +29,20 @@ body {
   justify-content: center;
 }
 
-/* ---------- Fondo animado — luz ambiental minimalista ---------- */
+/* ---------- Fondo animado — paleta expandida (rojo-violeta-azul) ---------- */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.7;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(124, 58, 237, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 70% 80%, rgba(185, 28, 28, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 30% 30% at 20% 20%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
-  animation: ambient-drift 12s ease-in-out infinite alternate;
+    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(145, 70, 255, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 35% at 15% 15%, rgba(59, 130, 246, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 85% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 25% 25% at 80% 20%, rgba(217, 70, 239, 0.06) 0%, transparent 50%);
+  animation: ambient-drift 14s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -47,7 +51,7 @@ body::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
   mix-blend-mode: overlay;
@@ -55,8 +59,8 @@ body::after {
 
 @keyframes ambient-drift {
   0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(3%, -2%) scale(1.02); }
-  100% { transform: translate(-3%, 2%) scale(0.98); }
+  50%  { transform: translate(4%, -3%) scale(1.02); }
+  100% { transform: translate(-4%, 3%) scale(0.98); }
 }
 
 /* ---------- Contenedor central ---------- */
@@ -66,17 +70,74 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
-  padding: 40px;
+  gap: 40px;
+  padding: 60px 60px;
   text-align: center;
+  width: 100%;
+  max-width: 600px;
 }
 
-/* ---------- NOMBRE — Synthwave suave ---------- */
+/* ---------- FRAME LINES + NOMBRE — wrapper para equidistancia ---------- */
+.name-container {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.frame-line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 2px;
+  width: 360px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(145, 70, 255, 0.55) 18%,
+    rgba(192, 132, 252, 0.95) 50%,
+    rgba(145, 70, 255, 0.55) 82%,
+    transparent 100%);
+  box-shadow:
+    0 0 10px rgba(145, 70, 255, 0.45),
+    0 0 20px rgba(145, 70, 255, 0.22);
+  pointer-events: none;
+  animation: frame-pulse 3s ease-in-out infinite;
+  z-index: 2;
+}
+
+/* La línea de arriba está por encima del nombre, la de abajo por debajo */
+.frame-top {
+  top: calc(-1 * (100% + 28px));
+  /* 28px de separación desde el borde del nombre */
+}
+
+.frame-bottom {
+  top: calc(100% + 28px);
+  /* mismo 28px de separación desde el borde del nombre */
+}
+
+@keyframes frame-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    box-shadow:
+      0 0 8px rgba(145, 70, 255, 0.35),
+      0 0 16px rgba(145, 70, 255, 0.15);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 18px rgba(145, 70, 255, 0.65),
+      0 0 36px rgba(145, 70, 255, 0.4);
+  }
+}
+
+/* ---------- NOMBRE — Orbitron (tipografía anterior, más limpia) ---------- */
 .name {
   position: relative;
   display: inline-block;
   font-family: 'Orbitron', 'Segoe UI', system-ui, sans-serif;
-  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-size: clamp(3rem, 12vw, 6rem);
   font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -86,58 +147,110 @@ body::after {
     0 0 40px rgba(168, 85, 247, 0.4),
     0 0 80px rgba(168, 85, 247, 0.25),
     0 0 120px rgba(124, 58, 237, 0.15);
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  /* Evitar que el glow se desborde hacia arriba */
+  overflow: visible;
 }
 
-/* Sutil scanline para synthwave */
-.name::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(168, 85, 247, 0.6) 50%,
-    transparent 100%);
-  animation: scanline 3s linear infinite;
-  opacity: 0.5;
-}
-
-@keyframes scanline {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* Glitch secundario — muy sutil, solo tono rojo en capa */
+/* Glitch secundario */
 .name-glitch {
   position: absolute;
   top: 0;
   left: 0;
   color: #EF4444;
   text-shadow:
-    -2px 0 rgba(239, 68, 68, 0.4),
-    2px 0 rgba(239, 68, 68, 0.4);
-  opacity: 0.15;
-  clip-path: inset(0 0 60% 0);
-  animation: glitch-shift 4s ease-in-out infinite;
+    -3px 0 rgba(239, 68, 68, 0.35),
+    3px 0 rgba(239, 68, 68, 0.35);
+  opacity: 0.12;
+  clip-path: inset(0 0 55% 0);
+  animation: glitch-shift 5s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes glitch-shift {
-  0%, 100% { transform: translate(0, 0); opacity: 0.15; }
-  92%      { transform: translate(-2px, 1px); opacity: 0.25; }
-  94%      { transform: translate(2px, -1px); opacity: 0.1; }
-  96%      { transform: translate(-1px, 0); opacity: 0.2; }
-  98%      { transform: translate(1px, 1px); opacity: 0.15; }
+  0%, 100% { transform: translate(0, 0); opacity: 0.1; }
+  91%      { transform: translate(-2px, 1px); opacity: 0.18; }
+  93%      { transform: translate(2px, -1px); opacity: 0.08; }
+  95%      { transform: translate(-1px, 0); opacity: 0.15; }
+  97%      { transform: translate(1px, 1px); opacity: 0.12; }
+  99%      { transform: translate(0, -1px); opacity: 0.16; }
 }
 
-/* ---------- Botones ---------- */
+/* ---------- EASTER EGG — Botón B con glow visible en hover ---------- */
+.easter-egg {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(145, 70, 255, 0.15);
+  background: rgba(145, 70, 255, 0.04);
+  color: rgba(192, 132, 252, 0.2);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 100;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease,
+              box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+/* Siempre hay un indicador muy sutil para que se pueda descubrir */
+.easter-egg::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 14px;
+  background: radial-gradient(circle at center, rgba(145, 70, 255, 0.06), transparent 70%);
+  opacity: 0.5;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+/* Hover: glow intenso + borde brillante + escala */
+.easter-egg:hover {
+  border-color: rgba(145, 70, 255, 0.6);
+  background: rgba(145, 70, 255, 0.1);
+  color: #C084FC;
+  box-shadow:
+    0 0 30px rgba(145, 70, 255, 0.7),
+    0 0 60px rgba(145, 70, 255, 0.4),
+    0 0 100px rgba(145, 70, 255, 0.2);
+  transform: scale(1.15);
+}
+
+.easter-egg:hover::before {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(145, 70, 255, 0.2), transparent 70%);
+}
+
+/* Click: destello máximo */
+.easter-egg:active {
+  transform: scale(0.92);
+  border-color: rgba(145, 70, 255, 0.9);
+  background: rgba(145, 70, 255, 0.18);
+  color: #EDE9FE;
+  box-shadow:
+    0 0 50px rgba(145, 70, 255, 0.9),
+    0 0 100px rgba(145, 70, 255, 0.6),
+    0 0 150px rgba(145, 70, 255, 0.35);
+}
+
+.easter-egg:focus-visible {
+  border-color: rgba(145, 70, 255, 0.5);
+  box-shadow:
+    0 0 20px rgba(145, 70, 255, 0.4),
+    0 0 40px rgba(145, 70, 255, 0.2);
+  color: #C084FC;
+  background: rgba(145, 70, 255, 0.08);
+}
+
+/* ---------- Botones — border-radius 16px (intermedio) ---------- */
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   align-items: center;
 }
 
@@ -145,20 +258,19 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 36px;
-  border-radius: 999px;
+  padding: 16px 40px;
+  border-radius: 16px;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.35s ease, background 0.35s ease, border-color 0.35s ease;
   position: relative;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn .icon,
-.btn .icon-twitch {
+.btn .icon {
   width: 20px;
   height: 20px;
   fill: none;
@@ -169,101 +281,164 @@ body::after {
   transition: stroke 0.3s ease;
 }
 
-/* Instagram — gradiente propio */
+/* Instagram — gradiente naranja → rosa → violeta */
 .btn-instagram {
-  background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+  background: linear-gradient(135deg, #F97316, #EC4899, #8B5CF6);
   color: #fff;
   box-shadow:
-    0 4px 24px rgba(221, 42, 123, 0.35),
-    0 0 60px rgba(221, 42, 123, 0.1);
+    0 4px 28px rgba(236, 72, 153, 0.4),
+    0 0 80px rgba(139, 92, 246, 0.12);
 }
 
 .btn-instagram:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-3px) scale(1.03);
   box-shadow:
-    0 8px 32px rgba(221, 42, 123, 0.5),
-    0 0 80px rgba(221, 42, 123, 0.2);
+    0 8px 40px rgba(236, 72, 153, 0.55),
+    0 0 100px rgba(139, 92, 246, 0.2);
 }
 
 .btn-instagram:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
-/* Twitch — purple premium con logo oficial */
+/* Twitch — violeta #9146FF oficial + azul en hover */
 .btn-twitch {
-  background: rgba(124, 58, 237, 0.12);
-  color: #C8A8FF;
-  border: 1px solid rgba(124, 58, 237, 0.35);
+  background: rgba(145, 70, 255, 0.1);
+  color: #C4B5FD;
+  border: 1px solid rgba(145, 70, 255, 0.4);
   box-shadow:
-    0 4px 20px rgba(124, 58, 237, 0.15);
+    0 4px 24px rgba(145, 70, 255, 0.18);
 }
 
 .btn-twitch:hover {
-  background: rgba(124, 58, 237, 0.2);
-  color: #E5D5FF;
-  border-color: rgba(124, 58, 237, 0.6);
+  background: linear-gradient(135deg, rgba(145, 70, 255, 0.2), rgba(59, 130, 246, 0.1));
+  color: #EDE9FE;
+  border-color: rgba(145, 70, 255, 0.7);
   box-shadow:
-    0 8px 30px rgba(124, 58, 237, 0.3),
-    0 0 60px rgba(124, 58, 237, 0.1);
-  transform: translateY(-2px) scale(1.02);
+    0 8px 36px rgba(145, 70, 255, 0.35),
+    0 0 80px rgba(59, 130, 246, 0.15);
+  transform: translateY(-3px) scale(1.03);
 }
 
 .btn-twitch:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
-/* Icono Twitch — se pone en color puro (no hereda stroke) */
-.btn-twitch .icon-twitch {
+/* Logo Twitch */
+.logo-twitch {
+  width: 26px;
+  height: 26px;
   fill: currentColor;
   stroke: none;
-  width: 22px;
-  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.btn:hover .logo-twitch {
+  transform: scale(1.1);
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 480px) {
   .container {
-    gap: 28px;
-    padding: 32px 20px;
+    gap: 36px;
+    padding: 40px 20px;
   }
 
   .name {
-    font-size: clamp(2.4rem, 14vw, 3.6rem);
+    font-size: clamp(2.4rem, 16vw, 4rem);
   }
 
   .btn {
-    padding: 14px 28px;
+    padding: 14px 32px;
     font-size: 0.95rem;
     gap: 10px;
+    border-radius: 14px;
   }
 
-  .btn .icon,
-  .btn .icon-twitch {
+  .btn .icon {
     width: 18px;
     height: 18px;
+  }
+
+  .logo-twitch {
+    width: 22px;
+    height: 22px;
+  }
+
+  .frame-line {
+    width: 280px;
+  }
+
+  /* Ajustar distancia de las líneas en móvil */
+  .frame-top {
+    top: calc(-1 * (100% + 22px));
+  }
+  .frame-bottom {
+    top: calc(100% + 22px);
+  }
+
+  .easter-egg {
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+    top: 12px;
+    left: 12px;
+    border-radius: 10px;
+  }
+  .easter-egg::before {
+    border-radius: 12px;
+    inset: -2px;
   }
 }
 
 @media (max-height: 600px) {
   .container {
-    gap: 18px;
-    padding: 20px;
+    gap: 24px;
+    padding: 30px;
   }
 
   .name {
-    font-size: clamp(2rem, 8vh, 2.8rem);
+    font-size: clamp(2rem, 10vh, 3rem);
   }
 
   .btn {
-    padding: 12px 24px;
+    padding: 12px 28px;
     font-size: 0.9rem;
+    border-radius: 14px;
+  }
+
+  .logo-twitch {
+    width: 20px;
+    height: 20px;
+  }
+
+  .frame-line {
+    width: 220px;
+  }
+
+  .frame-top {
+    top: calc(-1 * (100% + 18px));
+  }
+  .frame-bottom {
+    top: calc(100% + 18px);
+  }
+
+  .easter-egg {
+    width: 36px;
+    height: 36px;
+    font-size: 11px;
+    top: 10px;
+    left: 10px;
+    border-radius: 8px;
   }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   body::before { animation: none; }
-  .name::after { animation: none; }
-  .name-glitch { animation: none; opacity: 0.08; }
+  .frame-line { animation: none; opacity: 0.85; }
+  .name-glitch { animation: none; opacity: 0.1; }
   .btn { transition: none; }
+  .easter-egg { transition: none; }
+  .easter-egg:hover { transform: none; box-shadow: none; }
 }
