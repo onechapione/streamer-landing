@@ -3,109 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[NAME] — Streamer · Gaming · Creator</title>
-  <meta name="description" content="Streamer argentino en crecimiento. Gaming, directos y comunidad desde Buenos Aires.">
+  <title>Onechapi</title>
+  <meta name="description" content="Streamer argentino. Gaming, directos y comunidad.">
+  <meta property="og:title" content="Onechapi">
+  <meta property="og:description" content="Streamer argentino. Gaming, directos y comunidad.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onechapione.github.io/streamer-landing/">
+  <meta property="og:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%237C3AED' stroke-width='3'/%3E%3Cpath d='M30 8 L30 36 M25 36 L35 36' stroke='%237C3AED' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container">
 
-  <!-- ==================== HEADER ==================== -->
-  <header class="site-header">
-    <div class="wrap">
-      <a href="#" class="site-logo" aria-label="Volver arriba">
-        <span class="logo-icon">S</span>
-        <span>[NAME]</span>
+    <!-- ============ NOMBRE ============ -->
+    <h1 class="name">
+      <span class="name-text">Onechapi</span>
+      <span class="name-glitch" aria-hidden="true">Onechapi</span>
+    </h1>
+
+    <!-- ============ BOTONES ============ -->
+    <div class="buttons">
+      <a href="https://instagram.com/onechapi" class="btn btn-instagram" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="5"/>
+          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+      <a href="https://twitch.tv/onechapi" class="btn btn-twitch" target="_blank" rel="noopener noreferrer">
+        <svg class="icon-twitch" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 7.217l-5.644-9.07l-10.14-2.149 2.149 10.14L0 7.217l10.14-2.149L22 7.217zM12 8.79l-4.5 4.5 1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z"/>
+        </svg>
+        <span>Twitch</span>
       </a>
     </div>
-  </header>
 
-  <main>
-
-    <!-- ==================== HERO ==================== -->
-    <section class="hero">
-      <div class="wrap">
-
-        <div class="hero-avatar reveal">
-          <!-- Avatar: cambiar src por tu foto. Formato recomendado: WebP/AVIF -->
-          <img src="assets/avatar.webp"
-               alt="Avatar de [NAME]"
-               width="140" height="140"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
-          <div class="avatar-fallback" style="display:none;">S</div>
-        </div>
-
-        <span class="hero-eyebrow reveal reveal-delay-1">Streamer • Gaming • Creator</span>
-
-        <h1 class="hero-name reveal reveal-delay-2">[NAME]</h1>
-
-        <p class="hero-location reveal reveal-delay-3">Transmitiendo desde Buenos Aires</p>
-
-        <p class="hero-desc reveal reveal-delay-4">
-          Streamer argentino en crecimiento, creando contenido, compartiendo partidas y construyendo una comunidad.
-        </p>
-
-        <div class="hero-actions reveal reveal-delay-5">
-          <a href="#" class="btn btn-primary" id="btn-stream">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-            VER STREAM
-          </a>
-          <a href="#redes" class="btn btn-secondary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-              <polyline points="15 3 21 3 21 9"/>
-              <line x1="10" y1="14" x2="21" y2="3"/>
-            </svg>
-            MIS REDES
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==================== REDES ==================== -->
-    <section class="section" id="redes">
-      <div class="wrap">
-        <p class="section-label reveal">Encontrarme en</p>
-        <div class="socials-grid" id="socials-grid">
-          <!-- Tarjetas inyectadas por JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== SOBRE MÍ ==================== -->
-    <section class="section about-section">
-      <div class="wrap">
-        <p class="section-label reveal">Sobre mí</p>
-        <div class="about-content">
-          <p class="reveal reveal-delay-1" id="about-text">
-            Soy un streamer argentino nacido en 1991, de Buenos Aires, La Matanza. Estoy construyendo mi camino en el mundo del streaming y creando una comunidad alrededor del gaming, el entretenimiento y los directos.
-          </p>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="site-footer">
-    <div class="wrap">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <span class="name" id="footer-name">[NAME]</span>
-          <span class="tagline">Streamer • Gaming • Creator</span>
-          <span class="location">Buenos Aires, Argentina</span>
-        </div>
-        <div class="footer-socials" id="footer-socials">
-          <!-- Iconos inyectados por JS -->
-        </div>
-      </div>
-      <p class="footer-copy">&copy; 2026 <span id="footer-copy-name">[NAME]</span>. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
+  </div>
 </body>
 </html>
