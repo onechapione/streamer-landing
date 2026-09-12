@@ -13,20 +13,17 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%239146FF' stroke-width='3'/%3E%3Cpath d='M22 7.217L16.356 16.287L6.216 14.138l2.149 10.14 10.14-2.149L22 7.217zM12 8.79L7.5 13.29l1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z' fill='%239146FF'/%3E%3C/svg%3E">
-  <!-- Google Fonts: Orbitron -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- EASTER EGG: botón B invisible (esquina superior izquierda) -->
   <button class="easter-egg" id="easter-egg-btn" aria-label="Easter egg secreto" title="Secret">
     B
   </button>
 
   <div class="container">
-    <!-- Marcos de líneas + nombre en un wrapper para alinear todo -->
     <div class="name-frame-wrapper">
       <div class="frame-line frame-top"></div>
       <h1 class="name">
@@ -36,7 +33,6 @@
       <div class="frame-line frame-bottom"></div>
     </div>
 
-    <!-- ============ BOTONES ============ -->
     <div class="buttons">
       <a href="https://instagram.com/onechapi" class="btn btn-instagram" target="_blank" rel="noopener noreferrer">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -47,7 +43,6 @@
         <span>Instagram</span>
       </a>
       <a href="https://twitch.tv/onechapi" class="btn btn-twitch" target="_blank" rel="noopener noreferrer">
-        <!-- Twitch Glitch: SVG oficial del logo de Twitch (burbuja de chat + ojos) -->
         <svg class="logo-twitch" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 1.818L13.928 8.01L9.615 15.5L6.216 18.646L6.216 15.5L2 15.5L2 1.818L22 1.818L22 7.217L14.216 7.217L14.216 9.439L18.216 9.439L18.216 13.928L13.928 13.928L13.928 18.216L18.216 18.216L18.216 22.582L20 22.582L20 1.818z"/>
           <rect x="8.5" y="5.417" width="2.083" height="5"/>
@@ -56,215 +51,289 @@
         <span>Twitch</span>
       </a>
     </div>
-
   </div>
 
-  <!-- ===== SOUND: Easter egg horror show tension (Web Audio API) ===== -->
+  <!--
+    SOUND SYSTEM v4 — Organo "Exorcista" + Shhhhh Misterioso
+    Organo: múltiples harmonics (seno + sawtooth mezclados),
+            notes graves punteando lentamente con ataque medio/decay largo.
+    Shhhh: white noise → lowpass 800 Hz + notch 3kHz, modulado.
+    Todo en volumen muy bajo, sutil, misterioso.
+  -->
   <script>
   (function() {
     'use strict';
 
+    console.log('[sound-v4] Script loaded');
+
     const btn = document.getElementById('easter-egg-btn');
-    if (!btn) return;
+    if (!btn) {
+      console.warn('[sound-v4] Easter egg btn NOT found');
+      return;
+    }
+    console.log('[sound-v4] Easter egg btn found');
 
     let audioCtx = null;
-    let droneGain = null;
-    let droneOsc = null;
-    let noiseGain = null;
-    let noiseNode = null;
-    let filterNode = null;
-    let lfoGain = null;
-    let lfoOsc = null;
-    let isPlaying = false;
-    let animationId = null;
+    let isMouseInside = false;
 
-    // Volumen sutil pero audible — no molesta, pero se escucha
-    const VOLUME = 0.14;
-    // Frecuencia base del drone (grave, tensión)
-    const BASE_FREQ = 72;
-    // Frecuencia del LFO para vibrato del drone
-    const LFO_FREQ = 0.18;
+    // Volumen total muy bajo — misterio, no invasivo
+    const VOLUME = 0.10;
 
-    function initAudio() {
+    // === ORGANO ===
+    let organOscs = [];     // múltiples osciladores para harmonics
+    let organGain = null;    // gain del organo (volumen global)
+    let organFilter = null;  // filtro para dar carácter "organo"
+    let organSequencer = null; // LFO lento que "puntea" notas
+
+    // === SHHHH ===
+    let shhhSource = null;
+    let shhhFilter = null;
+    let shhhNotch = null;
+    let shhhGain = null;
+    let shhhLfo = null;
+    let shhhLfoGain = null;
+
+    // === MICRO-ECHO ===
+    let echoDelay = null;
+    let echoFeedback = null;
+    let echoWet = null;
+
+    // ====== INICIALIZAR ======
+    function setupAudio() {
       if (audioCtx) return;
+      if (document.hidden) return;
+
+      console.log('[sound-v4] setupAudio() called');
 
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // ---- Drone: oscilador grave con vibrato ----
-        droneOsc = audioCtx.createOscillator();
-        droneOsc.type = 'sawtooth';
-        droneOsc.frequency.value = BASE_FREQ;
+        console.log('[sound-v4] AudioContext created');
 
-        // Vibrato sutil (LFO controlando frecuencia del drone)
-        lfoOsc = audioCtx.createOscillator();
-        lfoOsc.type = 'sine';
-        lfoOsc.frequency.value = LFO_FREQ;
-        lfoGain = audioCtx.createGain();
-        lfoGain.gain.value = 2.5;
-        lfoOsc.connect(lfoGain);
-        lfoGain.connect(droneOsc.frequency);
-        lfoOsc.start();
+        // ====== ORGANO: múltiples harmonics ======
+        // Notas graves punteando, inspiración Exorcista
+        // Harmonics: fundamental + 2x + 3x + 4x (seno y sawtooth mezclados)
+        // Frecuencias: una nota grave (ej: 55 Hz = A1) con sus armónicos
 
-        // Filtro: low-pass que se abre/cierra para tensión dinámica
-        filterNode = audioCtx.createBiquadFilter();
-        filterNode.type = 'lowpass';
-        filterNode.frequency.value = 350;
-        filterNode.Q.value = 2.5;
+        const baseFreq = 55; // A1 — muy grave
+        const harmonics = [
+          { freq: baseFreq, type: 'sine', gain: 0.6 },     // fundamental
+          { freq: baseFreq * 2, type: 'sine', gain: 0.25 }, // 2do armónico
+          { freq: baseFreq * 3, type: 'sine', gain: 0.15 }, // 3er armónico
+          { freq: baseFreq * 4, type: 'sawtooth', gain: 0.08 }, // 4to armónico (sawtooth para carácter "organo")
+        ];
 
-        // Rutina de animación para el filtro (oscila entre 180-480 Hz)
-        function animateFilter() {
-          if (!filterNode) return;
-          const t = audioCtx.currentTime;
-          // Segunda oscilación lenta del filtro (más lenta que el LFO)
-          const lfo2 = Math.sin(t * 0.06) * 0.5 + 0.5;
-          filterNode.frequency.value = 180 + lfo2 * 300;
-          animationId = requestAnimationFrame(animateFilter);
+        organOscs = harmonics.map(h => {
+          const osc = audioCtx.createOscillator();
+          osc.type = h.type;
+          osc.frequency.value = h.freq;
+          osc.start();
+          console.log('[sound-v4] organ osc:', h.freq, 'Hz', h.type);
+          return osc;
+        });
+
+        organGain = audioCtx.createGain();
+        organGain.gain.value = 0;
+
+        organFilter = audioCtx.createBiquadFilter();
+        organFilter.type = 'lowpass';
+        organFilter.frequency.value = 500;
+        organFilter.Q.value = 4;
+
+        // Conectar: cada osc → organGain (mezclamos todos al mismo gain)
+        organOscs.forEach(osc => {
+          osc.connect(organFilter);
+        });
+        organFilter.connect(organGain);
+        organGain.connect(audioCtx.destination);
+        console.log('[sound-v4] organ chain connected');
+
+        // ====== SEQUENCER: punteo lento ======
+        // Intervalos de tiempo aleatorios entre 1.5 y 4 segundos
+        // Cada 2-3 segundos, el organo "punta" una nota (attack medio → decay largo)
+        // El sequencer controla el gain del organo con ataques suaves
+
+        let nextNoteTime = 0;
+        const minInterval = 1.5;
+        const maxInterval = 4;
+        const attackTime = 0.3;
+        const decayTime = 1.8;
+
+        function scheduleNextNote() {
+          if (!audioCtx || !organGain) return;
+
+          const now = audioCtx.currentTime;
+
+          // Si estamos dentro de una nota activa, esperar a que termine
+          if (nextNoteTime > now) {
+            // Volver a programar en el futuro
+            setTimeout(scheduleNextNote, (nextNoteTime - now) * 1000 + 50);
+            return;
+          }
+
+          // Elegir intervalo aleatorio para la próxima nota
+          const interval = minInterval + Math.random() * (maxInterval - minInterval);
+          nextNoteTime = now + interval;
+
+          // Ataque: subir el gain suavemente
+          organGain.gain.setTargetAtTime(VOLUME * 0.5, now, 0.05);
+
+          // Decay: bajar el gain lentamente después del attack
+          const decayStart = now + attackTime;
+          organGain.gain.setTargetAtTime(VOLUME * 0.08, decayStart, decayTime);
+
+          console.log('[sound-v4] Organ note at', now.toFixed(2), 'interval:', interval.toFixed(2), 's');
+
+          // Programar la próxima nota
+          setTimeout(scheduleNextNote, interval * 1000 + 50);
         }
 
-        droneOsc.connect(filterNode);
-        filterNode.connect(audioCtx.destination);
+        // Empezar a schedulear después de un pequeño delay (para que el AudioContext esté listo)
+        setTimeout(scheduleNextNote, 100);
 
-        droneGain = audioCtx.createGain();
-        droneGain.gain.value = 0;
-        droneOsc.connect(droneGain);
-        droneGain.connect(audioCtx.destination); // chain después del filter
-        // Re-rout: droneOsc -> filterNode -> droneGain -> destination
-        filterNode.disconnect();
-        droneOsc.disconnect();
-        droneOsc.connect(filterNode);
-        filterNode.connect(droneGain);
-        droneGain.connect(audioCtx.destination);
-
-        droneOsc.start();
-
-        // ---- Ruido: estática sutil de TV vieja ----
-        const bufferSize = audioCtx.sampleRate * 2;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * 0.04;
+        // ====== SHHHH ======
+        const bufSize = audioCtx.sampleRate * 2;
+        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) {
+          data[i] = (Math.random() * 2 - 1);
         }
 
-        noiseNode = audioCtx.createBufferSource();
-        noiseNode.buffer = buffer;
-        noiseNode.loop = true;
+        shhhSource = audioCtx.createBufferSource();
+        shhhSource.buffer = buf;
+        shhhSource.loop = true;
 
-        noiseGain = audioCtx.createGain();
-        noiseGain.gain.value = 0;
+        shhhFilter = audioCtx.createBiquadFilter();
+        shhhFilter.type = 'lowpass';
+        shhhFilter.frequency.value = 700;
+        shhhFilter.Q.value = 1.5;
 
-        // Filtro de ruido: high-pass sutil para que no sea blanco puro
-        const noiseFilter = audioCtx.createBiquadFilter();
-        noiseFilter.type = 'highpass';
-        noiseFilter.frequency.value = 800;
-        noiseFilter.Q.value = 1.2;
+        shhhNotch = audioCtx.createBiquadFilter();
+        shhhNotch.type = 'notch';
+        shhhNotch.frequency.value = 3000;
+        shhhNotch.Q.value = 3;
 
-        noiseNode.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(audioCtx.destination);
+        shhhGain = audioCtx.createGain();
+        shhhGain.gain.value = 0;
 
-        noiseNode.start();
+        shhhSource.connect(shhhFilter);
+        shhhFilter.connect(shhhNotch);
+        shhhNotch.connect(shhhGain);
+        shhhGain.connect(audioCtx.destination);
 
-        // ---- Reverb sutil (delay + feedback) ----
-        const delayTime = 0.28;
-        const delayNode = audioCtx.createDelay();
-        delayNode.delayTime.value = delayTime;
+        shhhLfo = audioCtx.createOscillator();
+        shhhLfo.type = 'sine';
+        shhhLfo.frequency.value = 0.08;
+        shhhLfoGain = audioCtx.createGain();
+        shhhLfoGain.gain.value = 0.92;
+        shhhLfo.connect(shhhLfoGain);
+        shhhLfoGain.connect(shhhGain.gain);
+        shhhLfo.start();
 
-        const feedbackGain = audioCtx.createGain();
-        feedbackGain.gain.value = 0.12;
+        console.log('[sound-v4] shhh ready');
 
-        const wetGain = audioCtx.createGain();
-        wetGain.gain.value = 0;
+        // ====== MICRO-ECHO ======
+        echoDelay = audioCtx.createDelay();
+        echoDelay.delayTime.value = 0.06;
 
-        // Ruta: droneGain -> delayNode -> feedbackGain -> delayNode (loop) + wetGain -> destination
-        droneGain.connect(delayNode);
-        delayNode.connect(feedbackGain);
-        feedbackGain.connect(delayNode);
-        delayNode.connect(wetGain);
-        wetGain.connect(audioCtx.destination);
+        echoFeedback = audioCtx.createGain();
+        echoFeedback.gain.value = 0.06;
 
-        // Guardar referencias para controlar volumen del reverb
-        droneGain._wetGain = wetGain;
-        droneGain._feedbackGain = feedbackGain;
+        echoWet = audioCtx.createGain();
+        echoWet.gain.value = 0;
 
-        // Iniciar animación del filtro
-        animateFilter();
+        organGain.connect(echoDelay);
+        shhhGain.connect(echoDelay);
+        echoDelay.connect(echoFeedback);
+        echoFeedback.connect(echoDelay);
+        echoDelay.connect(echoWet);
+        echoWet.connect(audioCtx.destination);
 
-        // Volume inicial
-        setVolume(0);
+        console.log('[sound-v4] echo ready');
 
       } catch (e) {
-        console.warn('Easter egg sound init failed:', e);
+        console.error('[sound-v4] ERROR:', e);
         audioCtx = null;
       }
     }
 
+    // Establecer volumen global
     function setVolume(v) {
-      if (!droneGain) return;
+      if (!audioCtx) {
+        console.warn('[sound-v4] setVolume: no AudioContext');
+        return;
+      }
+
+      const t = audioCtx.currentTime;
       const clamped = Math.max(0, Math.min(1, v));
-      droneGain.gain.setTargetAtTime(clamped * VOLUME, audioCtx.currentTime, 0.08);
-      noiseGain.gain.setTargetAtTime(clamped * VOLUME * 0.3, audioCtx.currentTime, 0.08);
-      if (droneGain._wetGain) {
-        droneGain._wetGain.gain.setTargetAtTime(clamped * VOLUME * 0.4, audioCtx.currentTime, 0.1);
+
+      console.log('[sound-v4] setVolume:', clamped);
+
+      if (organGain) {
+        organGain.gain.setTargetAtTime(clamped * VOLUME * 0.5, t, 0.05);
+      }
+      if (shhhGain) {
+        shhhGain.gain.setTargetAtTime(clamped * VOLUME * 0.7, t, 0.04);
+      }
+      if (echoWet) {
+        echoWet.gain.setTargetAtTime(clamped * VOLUME * 0.25, t, 0.08);
       }
     }
 
-    // ---- Event listeners ----
-    let hoverTimeout = null;
-
+    // Evento: mouse entra → sonido inicia
     btn.addEventListener('mouseenter', () => {
+      console.log('[sound-v4] mouseenter');
+
+      isMouseInside = true;
+
       if (!audioCtx) {
-        initAudio();
-        // Pequeño delay para que el contexto esté listo
-        setTimeout(() => {
-          if (audioCtx && !isPlaying) {
-            isPlaying = true;
-            setVolume(1);
-          }
-        }, 80);
-      } else if (!isPlaying) {
-        // Si el audioCtx existe pero se silenció, retomamos suave
-        isPlaying = true;
-        setVolume(1);
+        console.log('[sound-v4] AudioContext not ready, calling setupAudio()');
+        setupAudio();
+      } else {
+        console.log('[sound-v4] AudioContext exists, state:', audioCtx.state);
+        if (audioCtx.state === 'suspended') {
+          console.log('[sound-v4] calling resume()');
+          audioCtx.resume();
+        }
       }
+
+      setVolume(1);
     });
 
+    // Evento: mouse sale → silenciar
     btn.addEventListener('mouseleave', () => {
-      isPlaying = false;
-      if (droneGain) {
-        setVolume(0);
-      }
+      console.log('[sound-v4] mouseleave');
+      isMouseInside = false;
+      setVolume(0);
     });
 
-    // Touch support (mobile)
+    // Touch (mobile)
     btn.addEventListener('touchstart', (e) => {
       e.preventDefault();
+      console.log('[sound-v4] touchstart');
+
+      isMouseInside = true;
+
       if (!audioCtx) {
-        initAudio();
-        setTimeout(() => {
-          if (audioCtx && !isPlaying) {
-            isPlaying = true;
-            setVolume(1);
-          }
-        }, 80);
-      } else if (!isPlaying) {
-        isPlaying = true;
-        setVolume(1);
+        setupAudio();
+      } else if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
       }
+
+      setVolume(1);
     });
 
     btn.addEventListener('touchend', () => {
-      isPlaying = false;
-      if (droneGain) setVolume(0);
+      console.log('[sound-v4] touchend');
+      isMouseInside = false;
+      setVolume(0);
     });
 
-    // Cleanup al salir de página
+    // Cleanup
     window.addEventListener('beforeunload', () => {
-      if (animationId) cancelAnimationFrame(animationId);
-      if (droneOsc) { try { droneOsc.stop(); } catch(e) {} }
-      if (lfoOsc) { try { lfoOsc.stop(); } catch(e) {} }
-      if (noiseNode) { try { noiseNode.stop(); } catch(e) {} }
-      if (audioCtx && audioCtx.close) { audioCtx.close(); }
+      if (audioCtx) {
+        try { audioCtx.close(); } catch (e) {}
+      }
     });
   })();
   </script>
