@@ -3,54 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[NAME] — Streamer · Gaming · Creator</title>
-  <meta name="description" content="Streamer argentino en crecimiento. Gaming, directos y comunidad desde Buenos Aires.">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- ==================== SEO — TÍTULO Y DESCRIPCIÓN ==================== -->
+  <title>Onechapi — Streamer · Gaming · Creator</title>
+  <meta name="description" content="Onechapi: streamer argentino nacido en 1991 en Buenos Aires, La Matanza. Gaming, directos y comunidad. Transmitiendo desde Buenos Aires o algún lugar del planeta.">
+  <meta name="keywords" content="streamer, gaming, onechapi, twitch, Buenos Aires, argentino, directos, gaming argentino">
+  <meta name="author" content="Onechapi">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://onechapione.github.io/streamer-landing/">
+
+  <!-- ==================== OPEN GRAPH (Facebook, LinkedIn, WhatsApp) ==================== -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Onechapi — Streamer · Gaming · Creator">
+  <meta property="og:description" content="Streamer argentino en crecimiento, creando contenido, compartiendo partidas y construyendo una comunidad desde Buenos Aires.">
+  <meta property="og:url" content="https://onechapione.github.io/streamer-landing/">
+  <meta property="og:site_name" content="Onechapi">
+  <meta property="og:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.svg">
+  <meta property="og:image:width" content="400">
+  <meta property="og:image:height" content="400">
+  <meta property="og:image:alt" content="Avatar de Onechapi">
+  <meta property="og:locale" content="es_AR">
+
+  <!-- ==================== TWITTER CARD ==================== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@onechapi">
+  <meta name="twitter:creator" content="@onechapi">
+  <meta name="twitter:title" content="Onechapi — Streamer · Gaming · Creator">
+  <meta name="twitter:description" content="Streamer argentino en crecimiento, creando contenido, compartiendo partidas y construyendo una comunidad desde Buenos Aires.">
+  <meta name="twitter:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.svg">
+
+  <!-- ==================== COLOR DE BARRA DEL NAVEGADOR ==================== -->
+  <meta name="theme-color" content="#050505">
+
+  <!-- ==================== FAVICON ==================== -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%237C3AED' stroke-width='3'/%3E%3Cpath d='M30 8 L30 36 M25 36 L35 36' stroke='%237C3AED' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- ==================== ESTILOS ==================== -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- ==================== HEADER ==================== -->
-  <header class="site-header">
-    <div class="wrap">
-      <a href="#" class="site-logo" aria-label="Volver arriba">
+  <header class="site-header" role="banner">
+    <nav class="wrap" aria-label="Navegación principal">
+      <a href="/" class="site-logo" aria-label="Onechapi — ir al inicio">
         <span class="logo-icon o1-logo" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" width="30" height="30">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="18" cy="24" r="12" stroke="currentColor" stroke-width="3"/>
             <path d="M30 8 L30 36 M25 36 L35 36" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </span>
-        <span>Onechapi</span>
+        <span class="logo-text">Onechapi</span>
       </a>
-    </div>
+    </nav>
   </header>
 
   <main>
 
     <!-- ==================== HERO ==================== -->
-    <section class="hero">
+    <section class="hero" aria-label="Presentación principal">
       <div class="wrap">
 
         <div class="hero-avatar reveal">
-          <!-- Avatar: cambiar src por tu foto. Formato recomendado: WebP/AVIF -->
           <img src="assets/avatar.webp"
-               alt="Avatar de [NAME]"
+               alt="Avatar de Onechapi"
                width="140" height="140"
+               loading="eager"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
-          <div class="avatar-fallback" style="display:none;">S</div>
+          <div class="avatar-fallback" style="display:none;" aria-hidden="true">O1</div>
         </div>
 
-        <span class="hero-eyebrow reveal reveal-delay-1">Streamer • Gaming • Creator</span>
+        <span class="hero-eyebrow reveal reveal-delay-1">Streamer · Gaming · Creator</span>
 
-        <h1 class="hero-name reveal reveal-delay-2">[NAME]</h1>
+        <h1 class="hero-name reveal reveal-delay-2">Onechapi</h1>
 
-        <p class="hero-location reveal reveal-delay-3">Transmitiendo desde Buenos Aires</p>
+        <p class="hero-location reveal reveal-delay-3">Transmitiendo desde Buenos Aires, o algún lugar del planeta</p>
 
         <p class="hero-desc reveal reveal-delay-4">
           Streamer argentino en crecimiento, creando contenido, compartiendo partidas y construyendo una comunidad.
         </p>
 
         <div class="hero-actions reveal reveal-delay-5">
-          <a href="#" class="btn btn-primary" id="btn-stream">
+          <a href="https://twitch.tv/onechapi" class="btn btn-primary" id="btn-stream" target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M8 5v14l11-7z"/>
             </svg>
@@ -71,17 +106,17 @@
     </section>
 
     <!-- ==================== REDES ==================== -->
-    <section class="section" id="redes">
+    <section class="section" id="redes" aria-label="Redes sociales">
       <div class="wrap">
         <p class="section-label reveal">Encontrarme en</p>
-        <div class="socials-grid" id="socials-grid">
+        <div class="socials-grid" id="socials-grid" role="list">
           <!-- Tarjetas inyectadas por JS -->
         </div>
       </div>
     </section>
 
     <!-- ==================== SOBRE MÍ ==================== -->
-    <section class="section about-section">
+    <section class="section about-section" aria-label="Sobre mí">
       <div class="wrap">
         <p class="section-label reveal">Sobre mí</p>
         <div class="about-content">
@@ -95,19 +130,19 @@
   </main>
 
   <!-- ==================== FOOTER ==================== -->
-  <footer class="site-footer">
+  <footer class="site-footer" role="contentinfo">
     <div class="wrap">
       <div class="footer-inner">
         <div class="footer-brand">
-          <span class="name" id="footer-name">[NAME]</span>
-          <span class="tagline">Streamer • Gaming • Creator</span>
-          <span class="location">Buenos Aires, Argentina</span>
+          <span class="name" id="footer-name">Onechapi</span>
+          <span class="tagline">Streamer · Gaming · Creator</span>
+          <span class="location">Buenos Aires, o algún lugar del planeta</span>
         </div>
-        <div class="footer-socials" id="footer-socials">
+        <div class="footer-socials" id="footer-socials" role="list">
           <!-- Iconos inyectados por JS -->
         </div>
       </div>
-      <p class="footer-copy">&copy; 2026 <span id="footer-copy-name">[NAME]</span>. Todos los derechos reservados.</p>
+      <p class="footer-copy">&copy; 2026 Onechapi. Todos los derechos reservados.</p>
     </div>
   </footer>
 
