@@ -13,7 +13,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%239146FF' stroke-width='3'/%3E%3Cpath d='M22 7.217L16.356 16.287L6.216 14.138l2.149 10.14 10.14-2.149L22 7.217zM12 8.79L7.5 13.29l1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z' fill='%239146FF'/%3E%3C/svg%3E">
-  <!-- Google Fonts: Orbitron (tipografía anterior, más limpia) -->
+  <!-- Google Fonts: Orbitron -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
@@ -58,5 +58,215 @@
     </div>
 
   </div>
+
+  <!-- ===== SOUND: Easter egg horror show tension (Web Audio API) ===== -->
+  <script>
+  (function() {
+    'use strict';
+
+    const btn = document.getElementById('easter-egg-btn');
+    if (!btn) return;
+
+    let audioCtx = null;
+    let droneGain = null;
+    let droneOsc = null;
+    let noiseGain = null;
+    let noiseNode = null;
+    let filterNode = null;
+    let lfoGain = null;
+    let lfoOsc = null;
+    let isPlaying = false;
+    let animationId = null;
+
+    // Volumen sutil pero audible — no molesta, pero se escucha
+    const VOLUME = 0.14;
+    // Frecuencia base del drone (grave, tensión)
+    const BASE_FREQ = 72;
+    // Frecuencia del LFO para vibrato del drone
+    const LFO_FREQ = 0.18;
+
+    function initAudio() {
+      if (audioCtx) return;
+
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // ---- Drone: oscilador grave con vibrato ----
+        droneOsc = audioCtx.createOscillator();
+        droneOsc.type = 'sawtooth';
+        droneOsc.frequency.value = BASE_FREQ;
+
+        // Vibrato sutil (LFO controlando frecuencia del drone)
+        lfoOsc = audioCtx.createOscillator();
+        lfoOsc.type = 'sine';
+        lfoOsc.frequency.value = LFO_FREQ;
+        lfoGain = audioCtx.createGain();
+        lfoGain.gain.value = 2.5;
+        lfoOsc.connect(lfoGain);
+        lfoGain.connect(droneOsc.frequency);
+        lfoOsc.start();
+
+        // Filtro: low-pass que se abre/cierra para tensión dinámica
+        filterNode = audioCtx.createBiquadFilter();
+        filterNode.type = 'lowpass';
+        filterNode.frequency.value = 350;
+        filterNode.Q.value = 2.5;
+
+        // Rutina de animación para el filtro (oscila entre 180-480 Hz)
+        function animateFilter() {
+          if (!filterNode) return;
+          const t = audioCtx.currentTime;
+          // Segunda oscilación lenta del filtro (más lenta que el LFO)
+          const lfo2 = Math.sin(t * 0.06) * 0.5 + 0.5;
+          filterNode.frequency.value = 180 + lfo2 * 300;
+          animationId = requestAnimationFrame(animateFilter);
+        }
+
+        droneOsc.connect(filterNode);
+        filterNode.connect(audioCtx.destination);
+
+        droneGain = audioCtx.createGain();
+        droneGain.gain.value = 0;
+        droneOsc.connect(droneGain);
+        droneGain.connect(audioCtx.destination); // chain después del filter
+        // Re-rout: droneOsc -> filterNode -> droneGain -> destination
+        filterNode.disconnect();
+        droneOsc.disconnect();
+        droneOsc.connect(filterNode);
+        filterNode.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+
+        droneOsc.start();
+
+        // ---- Ruido: estática sutil de TV vieja ----
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.04;
+        }
+
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+
+        noiseGain = audioCtx.createGain();
+        noiseGain.gain.value = 0;
+
+        // Filtro de ruido: high-pass sutil para que no sea blanco puro
+        const noiseFilter = audioCtx.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.value = 800;
+        noiseFilter.Q.value = 1.2;
+
+        noiseNode.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+
+        noiseNode.start();
+
+        // ---- Reverb sutil (delay + feedback) ----
+        const delayTime = 0.28;
+        const delayNode = audioCtx.createDelay();
+        delayNode.delayTime.value = delayTime;
+
+        const feedbackGain = audioCtx.createGain();
+        feedbackGain.gain.value = 0.12;
+
+        const wetGain = audioCtx.createGain();
+        wetGain.gain.value = 0;
+
+        // Ruta: droneGain -> delayNode -> feedbackGain -> delayNode (loop) + wetGain -> destination
+        droneGain.connect(delayNode);
+        delayNode.connect(feedbackGain);
+        feedbackGain.connect(delayNode);
+        delayNode.connect(wetGain);
+        wetGain.connect(audioCtx.destination);
+
+        // Guardar referencias para controlar volumen del reverb
+        droneGain._wetGain = wetGain;
+        droneGain._feedbackGain = feedbackGain;
+
+        // Iniciar animación del filtro
+        animateFilter();
+
+        // Volume inicial
+        setVolume(0);
+
+      } catch (e) {
+        console.warn('Easter egg sound init failed:', e);
+        audioCtx = null;
+      }
+    }
+
+    function setVolume(v) {
+      if (!droneGain) return;
+      const clamped = Math.max(0, Math.min(1, v));
+      droneGain.gain.setTargetAtTime(clamped * VOLUME, audioCtx.currentTime, 0.08);
+      noiseGain.gain.setTargetAtTime(clamped * VOLUME * 0.3, audioCtx.currentTime, 0.08);
+      if (droneGain._wetGain) {
+        droneGain._wetGain.gain.setTargetAtTime(clamped * VOLUME * 0.4, audioCtx.currentTime, 0.1);
+      }
+    }
+
+    // ---- Event listeners ----
+    let hoverTimeout = null;
+
+    btn.addEventListener('mouseenter', () => {
+      if (!audioCtx) {
+        initAudio();
+        // Pequeño delay para que el contexto esté listo
+        setTimeout(() => {
+          if (audioCtx && !isPlaying) {
+            isPlaying = true;
+            setVolume(1);
+          }
+        }, 80);
+      } else if (!isPlaying) {
+        // Si el audioCtx existe pero se silenció, retomamos suave
+        isPlaying = true;
+        setVolume(1);
+      }
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      isPlaying = false;
+      if (droneGain) {
+        setVolume(0);
+      }
+    });
+
+    // Touch support (mobile)
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (!audioCtx) {
+        initAudio();
+        setTimeout(() => {
+          if (audioCtx && !isPlaying) {
+            isPlaying = true;
+            setVolume(1);
+          }
+        }, 80);
+      } else if (!isPlaying) {
+        isPlaying = true;
+        setVolume(1);
+      }
+    });
+
+    btn.addEventListener('touchend', () => {
+      isPlaying = false;
+      if (droneGain) setVolume(0);
+    });
+
+    // Cleanup al salir de página
+    window.addEventListener('beforeunload', () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      if (droneOsc) { try { droneOsc.stop(); } catch(e) {} }
+      if (lfoOsc) { try { lfoOsc.stop(); } catch(e) {} }
+      if (noiseNode) { try { noiseNode.stop(); } catch(e) {} }
+      if (audioCtx && audioCtx.close) { audioCtx.close(); }
+    });
+  })();
+  </script>
 </body>
 </html>
