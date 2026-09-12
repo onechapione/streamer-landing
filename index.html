@@ -12,17 +12,29 @@
   <meta property="og:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#050505">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%237C3AED' stroke-width='3'/%3E%3Cpath d='M30 8 L30 36 M25 36 L35 36' stroke='%237C3AED' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%239146FF' stroke-width='3'/%3E%3Cpath d='M22 7.217L16.356 16.287L6.216 14.138l2.149 10.14 10.14-2.149L22 7.217zM12 8.79L7.5 13.29l1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z' fill='%239146FF'/%3E%3C/svg%3E">
+  <!-- Google Fonts: Orbitron (tipografía anterior, más limpia) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <!-- EASTER EGG: botón B invisible (esquina superior izquierda) -->
+  <button class="easter-egg" id="easter-egg-btn" aria-label="Easter egg secreto" title="Secret">
+    B
+  </button>
 
-    <!-- ============ NOMBRE ============ -->
-    <h1 class="name">
-      <span class="name-text">Onechapi</span>
-      <span class="name-glitch" aria-hidden="true">Onechapi</span>
-    </h1>
+  <div class="container">
+    <!-- Marcos de líneas + nombre en un wrapper para alinear todo -->
+    <div class="name-frame-wrapper">
+      <div class="frame-line frame-top"></div>
+      <h1 class="name">
+        <span class="name-text">Onechapi</span>
+        <span class="name-glitch" aria-hidden="true">Onechapi</span>
+      </h1>
+      <div class="frame-line frame-bottom"></div>
+    </div>
 
     <!-- ============ BOTONES ============ -->
     <div class="buttons">
@@ -35,8 +47,11 @@
         <span>Instagram</span>
       </a>
       <a href="https://twitch.tv/onechapi" class="btn btn-twitch" target="_blank" rel="noopener noreferrer">
-        <svg class="icon-twitch" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 7.217l-5.644-9.07l-10.14-2.149 2.149 10.14L0 7.217l10.14-2.149L22 7.217zM12 8.79l-4.5 4.5 1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z"/>
+        <!-- Twitch Glitch: SVG oficial del logo de Twitch (burbuja de chat + ojos) -->
+        <svg class="logo-twitch" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 1.818L13.928 8.01L9.615 15.5L6.216 18.646L6.216 15.5L2 15.5L2 1.818L22 1.818L22 7.217L14.216 7.217L14.216 9.439L18.216 9.439L18.216 13.928L13.928 13.928L13.928 18.216L18.216 18.216L18.216 22.582L20 22.582L20 1.818z"/>
+          <rect x="8.5" y="5.417" width="2.083" height="5"/>
+          <rect x="13.417" y="5.417" width="2.083" height="5"/>
         </svg>
         <span>Twitch</span>
       </a>
