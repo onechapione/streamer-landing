@@ -9,21 +9,47 @@
   <meta property="og:description" content="Streamer argentino. Gaming, directos y comunidad.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://onechapione.github.io/streamer-landing/">
-  <meta property="og:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.svg">
+  <meta property="og:image" content="https://onechapione.github.io/streamer-landing/assets/avatar.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='24' r='12' fill='none' stroke='%239146FF' stroke-width='3'/%3E%3Cpath d='M22 7.217L16.356 16.287L6.216 14.138l2.149 10.14 10.14-2.149L22 7.217zM12 8.79L7.5 13.29l1.073 1.073L12 10.943l4.5 4.5 1.073-1.073L12 8.79z' fill='%239146FF'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="assets/avatar.jpg" as="image">
 </head>
 <body>
+
+  <!-- ====== ESCENA 3D - GRID DE SCANLINES EN PERSPECTIVA ====== -->
+  <div class="scene" aria-hidden="true">
+    <div class="grid-floor"></div>
+    <div class="grid-ceiling"></div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- ====== VIGNETTE / SCANLINE OVERLAY ====== -->
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ====== EASTER EGG / SOUND ====== -->
   <button class="easter-egg" id="easter-egg-btn" aria-label="Easter egg secreto" title="Secret">
     B
   </button>
 
-  <div class="container">
+  <!-- ====== CONTENIDO PRINCIPAL ====== -->
+  <main class="container">
+
+    <!-- ====== AVATAR + MARCO ====== -->
+    <div class="avatar-section">
+      <div class="avatar-ring">
+        <div class="avatar-ring-glow"></div>
+        <img src="assets/avatar.jpg" alt="Onechapi" class="avatar-img" loading="eager">
+        <div class="avatar-ring-border"></div>
+      </div>
+      <div class="avatar-ring-pulse"></div>
+    </div>
+
+    <!-- ====== NOMBRE CON FRAMES ====== -->
     <div class="name-frame-wrapper">
       <div class="frame-line frame-top"></div>
       <h1 class="name">
@@ -33,59 +59,311 @@
       <div class="frame-line frame-bottom"></div>
     </div>
 
-    <div class="buttons">
-      <a href="https://instagram.com/onechapi" class="btn btn-instagram" target="_blank" rel="noopener noreferrer">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-          <circle cx="12" cy="12" r="5"/>
-          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+    <!-- ====== TAGLINE / ESTATUS ====== -->
+    <div class="status-row">
+      <span class="tagline">STREAMER · GAMING · CREATOR</span>
+      <div class="live-badge" id="live-badge">
+        <span class="live-dot" id="live-dot"></span>
+        <span class="live-text" id="live-text">LIVE</span>
+      </div>
+      <button class="toggle-live-btn" id="toggle-live-btn" aria-label="Toggle estado LIVE" title="Toggle LIVE/Offline">
+        <svg class="toggle-icon" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+          <rect x="2" y="6" width="20" height="12" rx="2"/>
         </svg>
-        <span>Instagram</span>
-      </a>
-      <a href="https://twitch.tv/onechapi" class="btn btn-twitch" target="_blank" rel="noopener noreferrer">
-        <svg class="logo-twitch" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      </button>
+    </div>
+
+    <!-- ====== SOBRE MÍ ====== -->
+    <section class="section about-section" id="about">
+      <h2 class="section-title">Sobre mí</h2>
+      <div class="section-text-wrap">
+        <p class="section-text">
+          Streamer argentino desde 2014. Nací en Buenos Aires en 1991 y vivo en La Matanza.
+          Gaming, directos y comunidad — eso es lo que une a los tres.
+        </p>
+        <div class="section-accent"></div>
+      </div>
+    </section>
+
+    <!-- ====== STATS — ESTILO ROL ====== -->
+    <section class="section stats-section" id="stats">
+      <h2 class="section-title">Stats</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number" data-target="48">0</span>
+          <span class="stat-label">FID</span>
+          <span class="stat-sub">Reflejos</span>
+          <div class="stat-bar"><div class="stat-bar-fill" data-percent="92"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="87">0</span>
+          <span class="stat-label">INT</span>
+          <span class="stat-sub">Estrategia</span>
+          <div class="stat-bar"><div class="stat-bar-fill" data-percent="82"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="14">0</span>
+          <span class="stat-label">RES</span>
+          <span class="stat-sub">Resistencia</span>
+          <div class="stat-bar"><div class="stat-bar-fill" data-percent="100"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="1247">0</span>
+          <span class="stat-label">GRR</span>
+          <span class="stat-sub">Garras</span>
+          <div class="stat-bar"><div class="stat-bar-fill" data-percent="78"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== JUEGOS / CATEGORÍAS ====== -->
+    <section class="section games-section" id="games">
+      <h2 class="section-title">Juegos</h2>
+      <div class="games-grid">
+
+        <div class="game-card">
+          <div class="game-icon game-icon-fps" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4 L30 22 L46 22 L34 32 L38 48 L24 38 L10 48 L14 32 L2 22 L18 22 Z" fill="rgba(145,70,255,0.2)" stroke="#A855F7" stroke-width="1.5"/>
+              <circle cx="24" cy="22" r="4" fill="#A855F7"/>
+            </svg>
+          </div>
+          <span class="game-name">FPS</span>
+          <span class="game-sub">Valorant · Apex · CS</span>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon game-icon-battleground" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="14" width="32" height="20" rx="3" fill="rgba(34,211,238,0.15)" stroke="#22D3EE" stroke-width="1.5"/>
+              <path d="M14 22 L24 18 L34 22" stroke="#22D3EE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <circle cx="16" cy="28" r="1.5" fill="#22D3EE"/>
+              <circle cx="24" cy="28" r="1.5" fill="#22D3EE"/>
+              <circle cx="32" cy="28" r="1.5" fill="#22D3EE"/>
+            </svg>
+          </div>
+          <span class="game-name">BATTLEGROUNDS</span>
+          <span class="game-sub">Warzone · Fortnite · PUBG</span>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon game-icon-strat" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="8" width="28" height="32" rx="2" fill="rgba(236,72,153,0.12)" stroke="#EC4899" stroke-width="1.5"/>
+              <path d="M14 16 L24 12 L34 16 L34 18 L24 22 L14 18 Z" fill="#EC4899" opacity="0.5"/>
+              <rect x="14" y="22" width="20" height="2" rx="1" fill="rgba(236,72,153,0.4)"/>
+              <rect x="14" y="26" width="14" height="2" rx="1" fill="rgba(236,72,153,0.3)"/>
+              <rect x="14" y="30" width="18" height="2" rx="1" fill="rgba(236,72,153,0.25)"/>
+              <rect x="14" y="34" width="10" height="2" rx="1" fill="rgba(236,72,153,0.2)"/>
+            </svg>
+          </div>
+          <span class="game-name">ESTRATEGIA</span>
+          <span class="game-sub">LoL · Dota · StarCraft</span>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon game-icon-slashes" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="18" fill="rgba(250,204,21,0.1)" stroke="#FACC15" stroke-width="1.5"/>
+              <path d="M18 18 L30 30 M30 18 L18 30" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="24" cy="24" r="5" fill="rgba(250,204,21,0.2)" stroke="#FACC15" stroke-width="1"/>
+            </svg>
+          </div>
+          <span class="game-name">SLASHERS</span>
+          <span class="game-sub">Dead Space · Resident Evil · Doom</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====== PRÓXIMOS STREAMS ====== -->
+    <section class="section schedule-section" id="schedule">
+      <h2 class="section-title">Próximos Streams</h2>
+      <div class="schedule-list">
+
+        <div class="schedule-row">
+          <div class="schedule-day">
+            <span class="schedule-day-name">LUN</span>
+            <span class="schedule-day-num">12</span>
+          </div>
+          <div class="schedule-info">
+            <span class="schedule-time">22:00 ARG</span>
+            <span class="schedule-title">Valorant — Ranked Nights</span>
+          </div>
+          <div class="schedule-badge schedule-badge-live" title="Próximo stream">
+            <span class="schedule-pulse"></span>
+            LIVE
+          </div>
+        </div>
+
+        <div class="schedule-row">
+          <div class="schedule-day">
+            <span class="schedule-day-name">MIÉ</span>
+            <span class="schedule-day-num">14</span>
+          </div>
+          <div class="schedule-info">
+            <span class="schedule-time">22:00 ARG</span>
+            <span class="schedule-title">Apex Legends — Solos & Duo</span>
+          </div>
+          <div class="schedule-badge schedule-badge-next" title="Próximo stream">
+            <span class="schedule-dot"></span>
+            PRÓXIMO
+          </div>
+        </div>
+
+        <div class="schedule-row">
+          <div class="schedule-day">
+            <span class="schedule-day-name">VIE</span>
+            <span class="schedule-day-num">16</span>
+          </div>
+          <div class="schedule-info">
+            <span class="schedule-time">23:00 ARG</span>
+            <span class="schedule-title">Community Night — Chat decide</span>
+          </div>
+          <div class="schedule-badge schedule-badge-next" title="Próximo stream">
+            <span class="schedule-dot"></span>
+            PRÓXIMO
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====== COMUNIDAD / SQUAD ====== -->
+    <section class="section community-section" id="community">
+      <h2 class="section-title">Comunidad</h2>
+      <div class="squad-grid">
+
+        <div class="squad-card">
+          <div class="squad-avatar" aria-hidden="true"></div>
+          <span class="squad-name">Aritz</span>
+          <span class="squad-tag">bruja nocturna</span>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-avatar" aria-hidden="true"></div>
+          <span class="squad-name">Mnbr</span>
+          <span class="squad-tag">teórico</span>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-avatar" aria-hidden="true"></div>
+          <span class="squad-name">Erwan</span>
+          <span class="squad-tag">residente</span>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-avatar" aria-hidden="true"></div>
+          <span class="squad-name">Lauti</span>
+          <span class="squad-tag">siempre online</span>
+        </div>
+
+        <div class="squad-plus" aria-label="Y más integrantes del squad">
+          <span class="squad-plus-n">+N</span>
+          <span class="squad-plus-sub">más integrantes</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====== SETUP / EQUIPO ====== -->
+    <section class="section setup-section" id="setup">
+      <h2 class="section-title">Setup</h2>
+      <div class="setup-grid">
+
+        <div class="setup-item">
+          <span class="setup-label">GPU</span>
+          <span class="setup-value">RTX 4070 Ti SUPER</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 95%"></div></div>
+        </div>
+
+        <div class="setup-item">
+          <span class="setup-label">CPU</span>
+          <span class="setup-value">i5-13600K @ 5.1GHz</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 88%"></div></div>
+        </div>
+
+        <div class="setup-item">
+          <span class="setup-label">RAM</span>
+          <span class="setup-value">32GB DDR5 6000MHz</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 90%"></div></div>
+        </div>
+
+        <div class="setup-item">
+          <span class="setup-label">PANEL</span>
+          <span class="setup-value">LG 27GR83Q — 27" 240Hz</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 100%"></div></div>
+        </div>
+
+        <div class="setup-item">
+          <span class="setup-label">AUDIO</span>
+          <span class="setup-value">HyperX QuadCast S + Cloud II</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 85%"></div></div>
+        </div>
+
+        <div class="setup-item">
+          <span class="setup-label">INTERNET</span>
+          <span class="setup-value">100 Mbps OF — Ping 6ms</span>
+          <div class="setup-bar"><div class="setup-bar-fill" style="--pct: 92%"></div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====== BOTONES ====== -->
+    <div class="buttons">
+      <a href="https://twitch.tv/onechapi" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 1.818L13.928 8.01L9.615 15.5L6.216 18.646L6.216 15.5L2 15.5L2 1.818L22 1.818L22 7.217L14.216 7.217L14.216 9.439L18.216 9.439L18.216 13.928L13.928 13.928L13.928 18.216L18.216 18.216L18.216 22.582L20 22.582L20 1.818z"/>
           <rect x="8.5" y="5.417" width="2.083" height="5"/>
           <rect x="13.417" y="5.417" width="2.083" height="5"/>
         </svg>
-        <span>Twitch</span>
+        <span>VER STREAM</span>
+      </a>
+      <a href="https://instagram.com/onechapi" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="5"/>
+          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>INSTAGRAM</span>
       </a>
     </div>
-  </div>
 
-  <!--
-    SOUND SYSTEM v4 — Organo "Exorcista" + Shhhhh Misterioso
-    Organo: múltiples harmonics (seno + sawtooth mezclados),
-            notes graves punteando lentamente con ataque medio/decay largo.
-    Shhhh: white noise → lowpass 800 Hz + notch 3kHz, modulado.
-    Todo en volumen muy bajo, sutil, misterioso.
-  -->
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer" id="footer">
+      <div class="footer-links">
+        <a href="https://twitch.tv/onechapi" class="footer-link" target="_blank" rel="noopener noreferrer">Twitch</a>
+        <span class="footer-sep">·</span>
+        <a href="https://instagram.com/onechapi" class="footer-link" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <span class="footer-sep">·</span>
+        <a href="https://github.com/onechapione" class="footer-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Onechapi — todos los derechos reservados.</span>
+      <span class="footer-credit">Foto: Onechapi</span>
+    </footer>
+
+  </main>
+
+  <!-- ====== SOUND SYSTEM v6 — Organo + Shhhhh + Data Pulse ====== -->
   <script>
   (function() {
     'use strict';
 
-    console.log('[sound-v4] Script loaded');
-
     const btn = document.getElementById('easter-egg-btn');
-    if (!btn) {
-      console.warn('[sound-v4] Easter egg btn NOT found');
-      return;
-    }
-    console.log('[sound-v4] Easter egg btn found');
+    if (!btn) return;
 
     let audioCtx = null;
-    let isMouseInside = false;
+    let isSoundPlaying = false;
+    let soundTimeout = null;
 
-    // Volumen total muy bajo — misterio, no invasivo
     const VOLUME = 0.10;
+    const SOUND_DURATION = 11;
 
-    // === ORGANO ===
-    let organOscs = [];     // múltiples osciladores para harmonics
-    let organGain = null;    // gain del organo (volumen global)
-    let organFilter = null;  // filtro para dar carácter "organo"
-    let organSequencer = null; // LFO lento que "puntea" notas
+    let organOscs = [];
+    let organGain = null;
+    let organFilter = null;
 
-    // === SHHHH ===
     let shhhSource = null;
     let shhhFilter = null;
     let shhhNotch = null;
@@ -93,34 +371,26 @@
     let shhhLfo = null;
     let shhhLfoGain = null;
 
-    // === MICRO-ECHO ===
+    let pulseOsc = null;
+    let pulseGain = null;
+
     let echoDelay = null;
     let echoFeedback = null;
     let echoWet = null;
 
-    // ====== INICIALIZAR ======
     function setupAudio() {
       if (audioCtx) return;
       if (document.hidden) return;
 
-      console.log('[sound-v4] setupAudio() called');
-
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        console.log('[sound-v4] AudioContext created');
-
-        // ====== ORGANO: múltiples harmonics ======
-        // Notas graves punteando, inspiración Exorcista
-        // Harmonics: fundamental + 2x + 3x + 4x (seno y sawtooth mezclados)
-        // Frecuencias: una nota grave (ej: 55 Hz = A1) con sus armónicos
-
-        const baseFreq = 55; // A1 — muy grave
+        const baseFreq = 55;
         const harmonics = [
-          { freq: baseFreq, type: 'sine', gain: 0.6 },     // fundamental
-          { freq: baseFreq * 2, type: 'sine', gain: 0.25 }, // 2do armónico
-          { freq: baseFreq * 3, type: 'sine', gain: 0.15 }, // 3er armónico
-          { freq: baseFreq * 4, type: 'sawtooth', gain: 0.08 }, // 4to armónico (sawtooth para carácter "organo")
+          { freq: baseFreq, type: 'sine', gain: 0.55 },
+          { freq: baseFreq * 2, type: 'sine', gain: 0.22 },
+          { freq: baseFreq * 3, type: 'sine', gain: 0.12 },
+          { freq: baseFreq * 4, type: 'sawtooth', gain: 0.06 },
         ];
 
         organOscs = harmonics.map(h => {
@@ -128,7 +398,6 @@
           osc.type = h.type;
           osc.frequency.value = h.freq;
           osc.start();
-          console.log('[sound-v4] organ osc:', h.freq, 'Hz', h.type);
           return osc;
         });
 
@@ -137,67 +406,17 @@
 
         organFilter = audioCtx.createBiquadFilter();
         organFilter.type = 'lowpass';
-        organFilter.frequency.value = 500;
+        organFilter.frequency.value = 480;
         organFilter.Q.value = 4;
 
-        // Conectar: cada osc → organGain (mezclamos todos al mismo gain)
-        organOscs.forEach(osc => {
-          osc.connect(organFilter);
-        });
+        organOscs.forEach(osc => osc.connect(organFilter));
         organFilter.connect(organGain);
         organGain.connect(audioCtx.destination);
-        console.log('[sound-v4] organ chain connected');
 
-        // ====== SEQUENCER: punteo lento ======
-        // Intervalos de tiempo aleatorios entre 1.5 y 4 segundos
-        // Cada 2-3 segundos, el organo "punta" una nota (attack medio → decay largo)
-        // El sequencer controla el gain del organo con ataques suaves
-
-        let nextNoteTime = 0;
-        const minInterval = 1.5;
-        const maxInterval = 4;
-        const attackTime = 0.3;
-        const decayTime = 1.8;
-
-        function scheduleNextNote() {
-          if (!audioCtx || !organGain) return;
-
-          const now = audioCtx.currentTime;
-
-          // Si estamos dentro de una nota activa, esperar a que termine
-          if (nextNoteTime > now) {
-            // Volver a programar en el futuro
-            setTimeout(scheduleNextNote, (nextNoteTime - now) * 1000 + 50);
-            return;
-          }
-
-          // Elegir intervalo aleatorio para la próxima nota
-          const interval = minInterval + Math.random() * (maxInterval - minInterval);
-          nextNoteTime = now + interval;
-
-          // Ataque: subir el gain suavemente
-          organGain.gain.setTargetAtTime(VOLUME * 0.5, now, 0.05);
-
-          // Decay: bajar el gain lentamente después del attack
-          const decayStart = now + attackTime;
-          organGain.gain.setTargetAtTime(VOLUME * 0.08, decayStart, decayTime);
-
-          console.log('[sound-v4] Organ note at', now.toFixed(2), 'interval:', interval.toFixed(2), 's');
-
-          // Programar la próxima nota
-          setTimeout(scheduleNextNote, interval * 1000 + 50);
-        }
-
-        // Empezar a schedulear después de un pequeño delay (para que el AudioContext esté listo)
-        setTimeout(scheduleNextNote, 100);
-
-        // ====== SHHHH ======
         const bufSize = audioCtx.sampleRate * 2;
         const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-        const data = buf.getChannelData(0);
-        for (let i = 0; i < bufSize; i++) {
-          data[i] = (Math.random() * 2 - 1);
-        }
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) d[i] = (Math.random() * 2 - 1);
 
         shhhSource = audioCtx.createBufferSource();
         shhhSource.buffer = buf;
@@ -205,13 +424,13 @@
 
         shhhFilter = audioCtx.createBiquadFilter();
         shhhFilter.type = 'lowpass';
-        shhhFilter.frequency.value = 700;
-        shhhFilter.Q.value = 1.5;
+        shhhFilter.frequency.value = 650;
+        shhhFilter.Q.value = 1.4;
 
         shhhNotch = audioCtx.createBiquadFilter();
         shhhNotch.type = 'notch';
         shhhNotch.frequency.value = 3000;
-        shhhNotch.Q.value = 3;
+        shhhNotch.Q.value = 2.5;
 
         shhhGain = audioCtx.createGain();
         shhhGain.gain.value = 0;
@@ -225,20 +444,24 @@
         shhhLfo.type = 'sine';
         shhhLfo.frequency.value = 0.08;
         shhhLfoGain = audioCtx.createGain();
-        shhhLfoGain.gain.value = 0.92;
+        shhhLfoGain.gain.value = 0.9;
         shhhLfo.connect(shhhLfoGain);
         shhhLfoGain.connect(shhhGain.gain);
         shhhLfo.start();
 
-        console.log('[sound-v4] shhh ready');
+        pulseOsc = audioCtx.createOscillator();
+        pulseOsc.type = 'sine';
+        pulseOsc.frequency.value = 80;
+        pulseGain = audioCtx.createGain();
+        pulseGain.gain.value = 0;
+        pulseOsc.connect(pulseGain);
+        pulseGain.connect(audioCtx.destination);
+        pulseOsc.start();
 
-        // ====== MICRO-ECHO ======
         echoDelay = audioCtx.createDelay();
         echoDelay.delayTime.value = 0.06;
-
         echoFeedback = audioCtx.createGain();
-        echoFeedback.gain.value = 0.06;
-
+        echoFeedback.gain.value = 0.05;
         echoWet = audioCtx.createGain();
         echoWet.gain.value = 0;
 
@@ -249,93 +472,252 @@
         echoDelay.connect(echoWet);
         echoWet.connect(audioCtx.destination);
 
-        console.log('[sound-v4] echo ready');
-
       } catch (e) {
-        console.error('[sound-v4] ERROR:', e);
+        console.error('[sound-v6] ERROR:', e);
         audioCtx = null;
       }
     }
 
-    // Establecer volumen global
     function setVolume(v) {
-      if (!audioCtx) {
-        console.warn('[sound-v4] setVolume: no AudioContext');
-        return;
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+      const c = Math.max(0, Math.min(1, v));
+      if (organGain) organGain.gain.setTargetAtTime(c * VOLUME * 0.5, t, 0.05);
+      if (shhhGain) shhhGain.gain.setTargetAtTime(c * VOLUME * 0.7, t, 0.04);
+      if (echoWet) echoWet.gain.setTargetAtTime(c * VOLUME * 0.2, t, 0.08);
+      if (pulseGain) pulseGain.gain.setTargetAtTime(c * VOLUME * 0.15, t, 0.06);
+    }
+
+    function stopSound() {
+      if (soundTimeout) { clearTimeout(soundTimeout); soundTimeout = null; }
+      isSoundPlaying = false;
+      setVolume(0);
+      try { if (shhhSource) { shhhSource.stop(); shhhSource = null; } } catch(e) {}
+      if (organOscs.length) {
+        organOscs.forEach(osc => { try { osc.stop(); } catch(e) {} });
+        organOscs = [];
       }
+      try { if (shhhLfo) { shhhLfo.stop(); shhhLfo = null; } } catch(e) {}
+      try { if (pulseOsc) { pulseOsc.stop(); pulseOsc = null; } } catch(e) {}
+    }
+
+    function startSound() {
+      if (isSoundPlaying) return;
+      if (!audioCtx) setupAudio();
+      if (!audioCtx) return;
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(e => console.error('[sound-v6] resume failed:', e));
+      }
+
+      isSoundPlaying = true;
+
+      if (!shhhSource) {
+        const bufSize = audioCtx.sampleRate * 2;
+        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) d[i] = (Math.random() * 2 - 1);
+        shhhSource = audioCtx.createBufferSource();
+        shhhSource.buffer = buf;
+        shhhSource.loop = true;
+        shhhSource.connect(shhhFilter);
+        shhhSource.start();
+      }
+
+      if (organOscs.length === 0) {
+        const harmonics = [
+          { freq: 55, type: 'sine', gain: 0.55 },
+          { freq: 110, type: 'sine', gain: 0.22 },
+          { freq: 165, type: 'sine', gain: 0.12 },
+          { freq: 220, type: 'sawtooth', gain: 0.06 },
+        ];
+        organOscs = harmonics.map(h => {
+          const osc = audioCtx.createOscillator();
+          osc.type = h.type;
+          osc.frequency.value = h.freq;
+          osc.start();
+          return osc;
+        });
+      }
+
+      if (!shhhLfo || !shhhLfo.frequency) {
+        shhhLfo = audioCtx.createOscillator();
+        shhhLfo.type = 'sine';
+        shhhLfo.frequency.value = 0.08;
+        shhhLfoGain = audioCtx.createGain();
+        shhhLfoGain.gain.value = 0.9;
+        shhhLfo.connect(shhhLfoGain);
+        shhhLfoGain.connect(shhhGain.gain);
+        shhhLfo.start();
+      }
+
+      if (!pulseOsc || !pulseOsc.frequency) {
+        pulseOsc = audioCtx.createOscillator();
+        pulseOsc.type = 'sine';
+        pulseOsc.frequency.value = 80;
+        pulseGain = audioCtx.createGain();
+        pulseGain.gain.value = 0;
+        pulseOsc.connect(pulseGain);
+        pulseGain.connect(audioCtx.destination);
+        pulseOsc.start();
+      }
+
+      setVolume(1);
+      soundTimeout = setTimeout(() => { stopSound(); }, SOUND_DURATION * 1000);
 
       const t = audioCtx.currentTime;
-      const clamped = Math.max(0, Math.min(1, v));
-
-      console.log('[sound-v4] setVolume:', clamped);
-
-      if (organGain) {
-        organGain.gain.setTargetAtTime(clamped * VOLUME * 0.5, t, 0.05);
-      }
-      if (shhhGain) {
-        shhhGain.gain.setTargetAtTime(clamped * VOLUME * 0.7, t, 0.04);
-      }
-      if (echoWet) {
-        echoWet.gain.setTargetAtTime(clamped * VOLUME * 0.25, t, 0.08);
+      if (pulseGain) {
+        pulseGain.gain.setValueAtTime(0, t);
+        pulseGain.gain.linearRampToValueAtTime(VOLUME * 0.15, t + 0.1);
+        pulseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+        pulseGain.gain.setValueAtTime(0, t + 1.2);
+        pulseGain.gain.linearRampToValueAtTime(VOLUME * 0.1, t + 1.3);
+        pulseGain.gain.exponentialRampToValueAtTime(0.001, t + 2.0);
       }
     }
 
-    // Evento: mouse entra → sonido inicia
-    btn.addEventListener('mouseenter', () => {
-      console.log('[sound-v4] mouseenter');
+    btn.addEventListener('mouseenter', () => startSound());
+    btn.addEventListener('mouseleave', () => stopSound());
+    btn.addEventListener('touchstart', (e) => { e.preventDefault(); startSound(); });
+    btn.addEventListener('touchend', () => stopSound());
 
-      isMouseInside = true;
-
-      if (!audioCtx) {
-        console.log('[sound-v4] AudioContext not ready, calling setupAudio()');
-        setupAudio();
-      } else {
-        console.log('[sound-v4] AudioContext exists, state:', audioCtx.state);
-        if (audioCtx.state === 'suspended') {
-          console.log('[sound-v4] calling resume()');
-          audioCtx.resume();
-        }
-      }
-
-      setVolume(1);
-    });
-
-    // Evento: mouse sale → silenciar
-    btn.addEventListener('mouseleave', () => {
-      console.log('[sound-v4] mouseleave');
-      isMouseInside = false;
-      setVolume(0);
-    });
-
-    // Touch (mobile)
-    btn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      console.log('[sound-v4] touchstart');
-
-      isMouseInside = true;
-
-      if (!audioCtx) {
-        setupAudio();
-      } else if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      setVolume(1);
-    });
-
-    btn.addEventListener('touchend', () => {
-      console.log('[sound-v4] touchend');
-      isMouseInside = false;
-      setVolume(0);
-    });
-
-    // Cleanup
     window.addEventListener('beforeunload', () => {
-      if (audioCtx) {
-        try { audioCtx.close(); } catch (e) {}
-      }
+      stopSound();
+      if (audioCtx) { try { audioCtx.close(); } catch(e) {} }
     });
   })();
   </script>
+
+  <!-- ====== LIVE BADGE AUTO-UPDATE + STAT COUNTERS ====== -->
+  <script>
+  (function() {
+    const liveDot = document.getElementById('live-dot');
+    const liveText = document.getElementById('live-text');
+    const liveBadge = document.getElementById('live-badge');
+    const toggleBtn = document.getElementById('toggle-live-btn');
+
+    let isLive = true;
+
+    const TWITCH_CLIENT_ID = '';
+    const TWITCH_USER_LOGIN = 'onechapi';
+
+    function updateLiveUI(live) {
+      isLive = live;
+      liveDot.style.background = live ? '#EF4444' : '#6B7280';
+      liveDot.style.boxShadow = live
+        ? '0 0 6px rgba(239,68,68,0.8), 0 0 12px rgba(239,68,68,0.3)'
+        : 'none';
+      liveText.textContent = live ? 'LIVE' : 'OFFLINE';
+      liveBadge.style.background = live ? 'rgba(239,68,68,0.08)' : 'rgba(107,114,128,0.06)';
+      liveBadge.style.borderColor = live ? 'rgba(239,68,68,0.3)' : 'rgba(107,114,128,0.2)';
+      liveText.style.color = live ? '#FCA5A5' : '#D1D5DB';
+    }
+
+    async function checkTwitchStream() {
+      if (!TWITCH_CLIENT_ID) return;
+      try {
+        const url = `https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(TWITCH_USER_LOGIN)}`;
+        const resp = await fetch(url, {
+          method: 'GET',
+          headers: { 'Client-Id': TWITCH_CLIENT_ID }
+        });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        const live = data.data && data.data.length > 0;
+        updateLiveUI(live);
+      } catch (e) {
+        console.error('[live-check]', e);
+      }
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        updateLiveUI(!isLive);
+      });
+    }
+
+    if (TWITCH_CLIENT_ID) {
+      checkTwitchStream();
+      setInterval(checkTwitchStream, 30000);
+    } else {
+      updateLiveUI(true);
+    }
+
+    // ===== STAT COUNTERS =====
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    function animateCounter(el, target) {
+      const duration = 1500;
+      const start = performance.now();
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(target * eased);
+        if (target >= 1000) {
+          el.textContent = (current / 1000).toFixed(1) + 'K';
+        } else {
+          el.textContent = current;
+        }
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target >= 1000
+          ? (target / 1000).toFixed(1) + 'K'
+          : target;
+      }
+      requestAnimationFrame(step);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          animateCounter(el, target);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statNumbers.forEach(el => observer.observe(el));
+  })();
+  </script>
+
+  <!-- ====== PARTICLES GENERATOR ====== -->
+  <script>
+  (function() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+
+    const colors = ['#A855F7', '#22D3EE', '#EC4899', '#FACC15'];
+    for (let i = 0; i < 42; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const ci = Math.floor(Math.random() * colors.length);
+      if (ci > 0 && ci < 4) p.classList.add(['cyan','pink','yellow'][ci - 1]);
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.animationDuration = (6 + Math.random() * 14).toFixed(2) + 's';
+      p.style.animationDelay = (Math.random() * 10).toFixed(2) + 's';
+      p.style.boxShadow = `0 0 8px ${colors[ci]}, 0 0 16px ${colors[ci]}44`;
+      container.appendChild(p);
+    }
+  })();
+  </script>
+
+  <!-- ====== SCROLL REVEAL ====== -->
+  <script>
+  (function() {
+    const els = document.querySelectorAll('.game-card, .schedule-row, .squad-card, .setup-item, .section');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('reveal');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  })();
+  </script>
+
 </body>
 </html>
